@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度学习期末复习 · 完整术语指南</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #f5f6fa;
+  --sidebar: #1e2a3a;
+  --sidebar-hover: #2a3a4e;
+  --sidebar-active: #3a5a8a;
+  --accent: #4a90d9;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --card: #fff;
+  --border: #e8ecf1;
+  --tag-bg: #eef3fa;
+  --good: #27ae60;
+  --bad: #e74c3c;
+  --warn: #f39c12;
+  --code-bg: #f8f9fb;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; }
+.sidebar {
+  width:300px; min-width:300px; background:var(--sidebar); color:#fff; overflow-y:auto; height:100vh; position:sticky; top:0;
+  display:flex; flex-direction:column;
+}
+.sidebar-header { padding:18px 16px 12px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-header h1 { font-size:18px; font-weight:700; }
+.sidebar-header p { font-size:11px; color:rgba(255,255,255,0.45); margin-top:3px; }
+.search-box { padding:8px 12px; }
+.search-box input {
+  width:100%; padding:7px 10px; border-radius:6px; border:none; background:rgba(255,255,255,0.1); color:#fff; font-size:12px; outline:none;
+}
+.search-box input::placeholder { color:rgba(255,255,255,0.3); }
+.search-box input:focus { background:rgba(255,255,255,0.18); }
+.cat-list { flex:1; overflow-y:auto; padding:2px 0 20px; }
+.cat-item { border-bottom:1px solid rgba(255,255,255,0.04); }
+.cat-header {
+  display:flex; align-items:center; justify-content:space-between; padding:8px 14px; cursor:pointer; font-size:12.5px; font-weight:600; transition:all 0.15s; user-select:none; color:rgba(255,255,255,0.9);
+}
+.cat-header:hover { background:var(--sidebar-hover); }
+.cat-header .arrow { display:inline-block; font-size:9px; transition:transform 0.2s; color:rgba(255,255,255,0.3); margin-right:4px; }
+.cat-header .arrow.open { transform:rotate(90deg); }
+.cat-header .count { font-size:10px; color:rgba(255,255,255,0.25); font-weight:400; }
+.term-list { display:none; }
+.term-list.open { display:block; }
+.term-item {
+  padding:5px 14px 5px 28px; cursor:pointer; font-size:12px; color:rgba(255,255,255,0.55); transition:all 0.12s; border-left:2px solid transparent;
+}
+.term-item:hover { color:#fff; background:var(--sidebar-hover); }
+.term-item.active { color:#fff; background:var(--sidebar-active); border-left-color:var(--accent); }
+.main { flex:1; overflow-y:auto; height:100vh; padding:0; }
+.main-header {
+  background:var(--card); padding:20px 30px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10;
+}
+.main-header h2 { font-size:22px; font-weight:700; }
+.main-header .breadcrumb { font-size:12px; color:var(--text-light); margin-top:3px; }
+.content { padding:24px 30px 50px; max-width:900px; }
+.welcome { text-align:center; padding:50px 20px; }
+.welcome h2 { font-size:26px; margin-bottom:10px; }
+.welcome p { color:var(--text-light); max-width:480px; margin:0 auto 16px; line-height:1.7; font-size:14px; }
+.welcome .stats { display:flex; gap:24px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
+.welcome .stat-item { text-align:center; min-width:80px; }
+.welcome .stat-num { font-size:28px; font-weight:700; color:var(--accent); }
+.welcome .stat-label { font-size:12px; color:var(--text-light); margin-top:2px; }
+.term-detail { display:none; animation:fadeIn 0.25s ease; }
+.term-detail.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.detail-title { font-size:22px; font-weight:700; margin-bottom:4px; }
+.detail-cat { font-size:12px; color:var(--accent); font-weight:600; margin-bottom:16px; }
+.detail-section { margin-bottom:16px; }
+.detail-section h4 { font-size:14px; font-weight:600; margin-bottom:6px; color:var(--text); display:flex; align-items:center; gap:6px; }
+.detail-section h4 .icon { font-size:15px; }
+.detail-section p, .detail-section .text { font-size:13.5px; line-height:1.7; color:#444; }
+.text { font-size:13.5px; line-height:1.7; color:#444; }
+.formula-box {
+  background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:6px 0; text-align:center; overflow-x:auto;
+}
+.example-box { background:#f0f7ff; border-left:3px solid var(--accent); border-radius:6px; padding:10px 14px; margin:6px 0; }
+.example-box p { margin:0; font-size:13px; line-height:1.65; }
+.pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0; }
+@media(max-width:700px){ .pros-cons { grid-template-columns:1fr; } }
+.pros-box { background:#e8f8f0; border-radius:8px; padding:10px 14px; }
+.pros-box h5 { color:var(--good); margin-bottom:4px; font-size:12.5px; }
+.pros-box .item { font-size:12.5px; line-height:1.6; padding:1px 0; }
+.cons-box { background:#fde8e8; border-radius:8px; padding:10px 14px; }
+.cons-box h5 { color:var(--bad); margin-bottom:4px; font-size:12.5px; }
+.cons-box .item { font-size:12.5px; line-height:1.6; padding:1px 0; }
+.when-box { background:#fef6e6; border-left:3px solid var(--warn); border-radius:6px; padding:10px 14px; margin:6px 0; }
+.when-box p { font-size:13px; margin:0; }
+.table-box { overflow-x:auto; margin:6px 0; }
+.table-box table { width:100%; border-collapse:collapse; font-size:12.5px; }
+.table-box th, .table-box td { border:1px solid var(--border); padding:6px 10px; text-align:left; }
+.table-box th { background:var(--tag-bg); font-weight:600; }
+.table-box tr:nth-child(even) { background:var(--code-bg); }
+mjx-container { display:inline-block !important; margin:3px 0; }
+code { background:var(--code-bg); padding:1px 5px; border-radius:3px; font-size:12px; font-family:"SF Mono","Fira Code",monospace; }
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>🧠 深度学习·期末复习</h1>
+    <p>知识体系 · 点击即查</p>
+  </div>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="搜索术语..." oninput="filterTerms()">
+  </div>
+  <div class="cat-list" id="catList"></div>
+</div>
+
+<div class="main">
+  <div class="main-header">
+    <h2 id="detailTitle">欢迎使用复习指南</h2>
+    <div class="breadcrumb" id="breadcrumb"> 从左侧目录选择一个术语查看详情</div>
+  </div>
+  <div class="content" id="contentArea">
+    <div class="welcome" id="welcome">
+      <h2>深度学习 · 期末复习指南</h2>
+      <p>基于全部课程专栏和查漏补缺整理</p>
+      <p style="font-size:12px;color:var(--text-light);">每个术语包含：公式 · 通俗例子 · 优缺点 · 适用场景</p>
+      <div class="stats">
+        <div class="stat-item"><div class="stat-num">20</div><div class="stat-label">知识大类</div></div>
+        <div class="stat-item"><div class="stat-num">130+</div><div class="stat-label">核心术语</div></div>
+      </div>
+    </div>
+    <div id="detailContainer"></div>
+  </div>
+</div>
+
+<script>
+var D = [
+  {n:'一、神经网络基础', i:'🔬', ts:[
+    {id:'mcp',nm:'MCP模型 (1943)',
+     f:'$$y = f\\left(\\sum_{i=1}^n w_i x_i + b\\right)$$',
+     e:'好比一个开关：多个输入信号（树突接收），每个信号有不同权重（突触强度），加起来超过阈值就开灯（激活）。比如判断是否下雨：湿度权重0.6+乌云权重0.4\u22650.5\u2192下雨。',
+     p:['最早提出神经元的数学模型，概念奠基','结构清晰，可解释性强'],
+     c:['权重手工设定，不能学习','只能解决线性可分问题'],
+     w:'理解神经网络起源和生物对应关系时，考试常问MCP\u2192感知机的发展脉络。'},
+    {id:'perc',nm:'单层感知机 (1957)',
+     f:'$$a = \\sigma(\\sum w_i x_i + b)$$  学习规则：预测错误时调整权重',
+     e:'判断一封邮件是否为垃圾邮件。预测错了就调权重\u2014\u2014把垃圾邮件判成了正常邮件，就增大相关关键词的权重。能学AND和OR，但学不了XOR（线性不可分）。',
+     p:['权重可从数据中学习','简单直观，适合入门理解'],
+     c:['只能解决线性可分问题（XOR都搞不定）','单层网络表达能力有限'],
+     w:'理解神经网络为什么需要多层。感知机的局限\u2192多层感知机的必要性。'},
+    {id:'log',nm:'逻辑斯蒂回归',
+     f:'$$y = \\frac{1}{1+e^{-z}}, \\quad z = w^T x$$',
+     e:'判断肿瘤良恶性。输入特征（大小、边界是否规则等），输出0.85表示85%概率为恶性。不是输出是/否，而是输出概率，让你自己做决策。',
+     p:['输出可解释为概率','凸函数有全局最优解','任意阶可导'],
+     c:['决策边界天生是线性的','对特征间复杂交互建模能力弱'],
+     w:'二分类问题，需要输出概率的场合\u2014\u2014医学诊断、信用评分等。'},
+    {id:'sfmx',nm:'Softmax回归',
+     f:'$$p(y=c|x_n) = \\frac{\\exp(w_c^T x_n)}{\\sum_{k=1}^C \\exp(w_k^T x_n)}$$',
+     e:'给一张猫图，模型算出三类分数：[4.3, 1.2, -0.5]。Softmax后变成[0.95, 0.04, 0.01]\u2014\u2014猫95%概率，总和=1。梯度极简：\u2202L/\u2202z_i = \u0177_i - y_i',
+     p:['输出归一化为概率分布','配合交叉熵梯度极简'],
+     c:['指数运算在类别极多时计算量大','对异常值敏感'],
+     w:'多分类问题的输出层标配，配合交叉熵使用。'},
+    {id:'ls',nm:'最小二乘 (LS)',
+     f:'$$\\min_w \\frac12\\|y-Xw\\|_2^2, \\quad w^* = (X^T X)^{-1}X^T y$$',
+     e:'预测房价：房屋面积\u2192房价。找一条直线y=wx+b，让所有点到直线的垂直距离平方和最小。',
+     p:['有闭合解析解，直接算不用迭代','计算快，可解释性强'],
+     c:['假设线性关系','需要X\u1d39X满秩','对异常值极度敏感'],
+     w:'特征和标签关系大致线性、变量数<样本数、需要可解释性的场景。'},
+    {id:'ridge',nm:'岭回归 (RR / Ridge)',
+     f:'$$\\min_w \\frac12\\|y-Xw\\|_2^2 + \\lambda\\|w\\|_2^2, \\quad w^* = (X^T X + \\lambda I)^{-1}X^T y$$',
+     e:'只有50个样本但有200个特征，最小二乘直接不可解。岭回归加\u03bbI后保证可逆，同时让权重变小防止过拟合。',
+     p:['特征数>样本数也能解','矩阵一定可逆','缩小权重防过拟合'],
+     c:['需要调\u03bb','所有权重都不为0，无特征选择能力'],
+     w:'高维小样本、特征多重共线性、最小二乘过拟合时。'}
+  ]},
+  {n:'二、卷积神经网络(CNN)', i:'\uD83E\uDDE9', ts:[
+    {id:'conv',nm:'卷积层 (Conv Layer)',
+     f:'输出: $$W_2 = \\frac{W_1+2P-K}{S}+1$$ 参数: $$(K^2C_{in}+1)C_{out}$$',
+     e:'用小手电（卷积核=3\u00d73）在全图滑动扫描，每照到一个区域就把亮度的加权和记下来。多个小手电（多个滤波器）各抓不同特征：一个抓边缘，一个抓纹理。',
+     p:['参数量远少于全连接（权值共享+局部连接）','平移不变性，对位置不敏感'],
+     c:['超参数多（K,S,P,N）需要调','感受野有限，大物体需要深层'],
+     w:'任何图像/空间数据的特征提取（图像分类、检测、分割）'},
+    {id:'pool',nm:'池化层 (Pooling Layer)',
+     f:'$$W_2 = \\frac{W_1-K}{S}+1$$  参数量 = 0',
+     e:'最大池化：每2\u00d72区域只保留最亮的一个像素。平均池化：取四个像素的平均值。相当于把一张高清图缩小成缩略图。',
+     p:['参数量为0，免费下采样','增大感受野，减少计算量'],
+     c:['丢失位置信息','最大池化丢掉了很多信息'],
+     w:'CNN中穿插在卷积层之间做下采样。'},
+    {id:'fc',nm:'全连接层 (FC Layer)',
+     f:'$$参数量 = (n_{in}+1) \\times n_{out}$$',
+     e:'CNN提取了猫耳朵、猫胡子等特征后，FC层综合判断这是猫。参数量巨大\u2014\u2014AlexNet 60M参数中FC占58M。现代趋势用全局平均池化替代FC。',
+     p:['可以拟合任意复杂决策边界','结构简单'],
+     c:['参数最多（常占总参数80%+）','容易过拟合'],
+     w:'CNN末端做分类决策。'},
+    {id:'textcnn',nm:'CNN在NLP中 (TextCNN)',
+     f:'文本\u2192Word Embedding\u21921D卷积\u21921D全局池化\u2192全连接\u2192分类',
+     e:'把文本当一维图像。句子\u201cI love deep learning\u201d\u2192词嵌入矩阵5\u00d7300，用1D卷积核size=2抓bigram(\u201cI love\u201d)，size=3抓trigram(\u201cI love deep\u201d)，池化后全连接分类。',
+     p:['短文本分类快且准','能抓局部n-gram特征'],
+     c:['感受野有限，长距离依赖不行','池化丢失位置信息（我打你=你打我）','需padding到固定长度'],
+     w:'短文本分类（情感分类、垃圾邮件识别）效果很好。长序列需要LSTM/Transformer。'},
+    {id:'dilated',nm:'空洞卷积 (Dilated Conv)',
+     f:'$$K_{eff} = K + (K-1)(d-1)$$  $$RF_n = RF_{n-1}+(K-1)\\cdot d\\cdot\\prod S_i$$',
+     e:'3\u00d73空洞卷积d=2：核中间打洞，实际覆盖5\u00d75区域，但参数还是9个。不花钱就扩大感受野。像戴着望远镜看近处\u2014\u2014看得远了但没多花力气。',
+     p:['不增参数扩大感受野','不丢失分辨率'],
+     c:['位置信息稀疏（中间像素全跳过了）','可能产生网格效应'],
+     w:'语义分割（保持分辨率同时扩大感受野）、ASPP模块、WaveNet。'}
+  ]},
+  {n:'三、经典CNN架构', i:'\uD83C\uDFD7\uFE0F', ts:[
+    {id:'lenet',nm:'LeNet-5 (1998)',
+     f:'C1(5\u00d75\u00d76)\u2192S2(Pool2)\u2192C3(5\u00d75\u00d716)\u2192S4(Pool2)\u2192C5(5\u00d75\u00d7120)\u2192F6(84)\u2192Out(10)  ~6万参数',
+     e:'最早的手写数字识别网络。具体参数：C1层156个参数，S2层0个参数，C3层2416个参数，F6层10164个参数。全连接层是参数大户。',
+     p:['CNN的开山之作','结构简洁明快'],
+     c:['只有6万参数，表达能力有限','没有ReLU和Dropout'],
+     w:'了解CNN起源和基础结构时参考。考试常考各层参数量计算。'},
+    {id:'alex',nm:'AlexNet (2012)',
+     f:'5Conv+3Pooling+3FC, 60M参数, Top-5 error 16% (第二名26%)',
+     e:'2012年ImageNet冠军，把深度学习带火的革命性网络。用ReLU解决梯度消失，用GPU加速，用Dropout防过拟合。第二名还是传统方法(26%)，它直接16%，碾压式胜利。',
+     p:['ReLU解决梯度消失','Dropout防过拟合','GPU证明可行性'],
+     c:['60M参数太大','3个FC层占绝大多数参数'],
+     w:'每个深度学习课程的必讲架构。理解把网络做深做大就能赢的起点。'},
+    {id:'vgg',nm:'VGG (2014)',
+     f:'VGG16/VGG19, 138M参数, Top-5 error 7.3%',
+     e:'核心创新：3个3\u00d73小核堆叠 = 1个7\u00d77大核的感受野，但参数更少（27C\u00b2 vs 49C\u00b2）。N个3\u00d73\u2192感受野=2N+1。公式简单有效。',
+     p:['小核堆叠省参数还能更深','结构规整，易于理解'],
+     c:['138M参数，太重了','3个FC层计算量大'],
+     w:'理解小核堆叠的设计哲学。作为特征提取backbone仍然常用。'},
+    {id:'goog',nm:'GoogLeNet / Inception (2014)',
+     f:'22层, 仅4M参数(AlexNet 60M的1/15), Top-5 error 6.7%',
+     e:'核心是Inception模块：1\u00d71、3\u00d73、5\u00d75卷积并联\u2192多尺度特征融合\u2192通道拼接。1\u00d71卷积先降维再算，省计算。淘汰FC层改用全局平均池化，参数从60M降到4M。',
+     p:['4M参数效率极高','多尺度特征融合','去FC大幅减少参数'],
+     c:['Inception模块设计复杂','需要手工调各分支的比例'],
+     w:'需要在计算资源有限时做高精度分类。'},
+    {id:'res',nm:'ResNet (2015)',
+     f:'$$F(x)+x$$ (残差连接), 152层, Top-5 error 3.6%(首次低于人眼)',
+     e:'何恺明发现：网络越深反而越差（不是过拟合，是退化！）。加上跳连接后152层随便训，梯度直接走跳线传回前层，解决退化。Bottleneck结构：1\u00d71降维\u21923\u00d73卷积\u21921\u00d71升维，进一步省参数。',
+     p:['解决深度网络退化问题','梯度可直接回传，容易优化','152层做到人眼水平'],
+     c:['增加了加法和通道匹配的复杂度','短路径依赖设计'],
+     w:'默认的首选CNN backbone。几乎所有CV任务的标配特征提取器。'},
+    {id:'dense',nm:'DenseNet (2017)',
+     f:'密集连接：所有前面层都拼到后面层（通道拼接，不是相加）',
+     e:'ResNet是高速公路（跳连相加），DenseNet是互联全城（每层和之前所有层都连）。特征反复用，每层只需12个通道，201层仅8M参数。',
+     p:['特征重用极致，每层只需少量通道','缓解梯度消失','201层仅8M参数'],
+     c:['显存占用大（需要保存所有特征图）','拼接的通道数超大'],
+     w:'计算资源充足、追求极致参数效率时。'}
+  ]},
+  {n:'四、目标检测', i:'\uD83C\uDFAF', ts:[
+    {id:'rcnn',nm:'R-CNN (2014)',
+     f:'Selective Search\u2192~2K候选框\u2192各框缩放227\u00d7227\u2192CNN\u2192SVM\u2192回归\u2192NMS',
+     e:'先找可能有物体的区域(SS算法生成~2000个候选框)，每个框单独过CNN，再用SVM判断类别，最后用回归器微调框位置。三个步骤独立。慢但有效。',
+     p:['开创了深度学习目标检测','精度比传统方法高很多'],
+     c:['~2000个候选框各跑一次CNN，巨慢(40-50s/张)','三步独立，不能端到端训练','SS候选区域也很慢'],
+     w:'理解目标检测的起源。'},
+    {id:'frcnn',nm:'Fast R-CNN (2015)',
+     f:'整图一次CNN\u2192RoI Pooling\u2192分类+回归联合训练',
+     e:'不用每个候选框都跑CNN了，整张图只跑一次CNN提取特征，用RoI Pooling把不同大小的候选框统一成固定尺寸。无需独立训练SVM和回归器了，全部统一网络训练。速度快20倍(2s/张)。',
+     p:['整图一次CNN，避免重复计算','端到端多任务训练'],
+     c:['SS算法仍然很慢'],
+     w:'了解R-CNN\u2192Fast R-CNN的演进。'},
+    {id:'frcnn2',nm:'Faster R-CNN (2015)',
+     f:'CNN\u2192RPN(9种Anchor)\u2192RoI Pooling\u2192分类+回归',
+     e:'用RPN(Region Proposal Network)替代人工设计的SS算法。RPN在特征图上滑动窗口，用9种Anchor（3尺寸\u00d73比例）直接预测有没有东西。真正端到端，0.2s/张。',
+     p:['RPN可训练，替代人工SS','速度快(0.2s/张)，精度最高'],
+     c:['还是两阶段流程，不够简洁'],
+     w:'精度优先的场景（医学影像、遥感、工业质检）。两阶段检测标杆。'},
+    {id:'yolo',nm:'YOLO (You Only Look Once)',
+     f:'单阶段：图像\u2192S\u00d7S网格\u2192每个网格预测B个框+C个类概率',
+     e:'看一眼就知道那里有只猫。把图像分成S\u00d7S网格，每个网格预测B个框位置+分类。整个过程一次前向，30+fps实时检测。和双阶段对比：YOLO单阶段速度快但精度略低；Faster R-CNN双阶段精度高但慢。',
+     p:['速度极快，实时检测','单阶段简洁端到端'],
+     c:['小物体检测不如Faster R-CNN','正负样本极度不平衡（后靠Focal Loss解决）'],
+     w:'需要实时检测（自动驾驶、视频监控、无人机）。工业部署首选。'},
+    {id:'nms',nm:'NMS (非极大值抑制)',
+     f:'1.按得分排序 2.选最高分保留 3.删除IoU>阈值框 4.重复',
+     e:'一个猫上有10个检测框叠在一起。NMS找出得分最高的框，把跟它重叠太多的框全扔掉，保留最好的一个。阈值0.5是标准，太高\u2192重复检测，太低\u2192漏检。改进版Soft-NMS不直接扔掉而是降分。',
+     p:['去除冗余检测框','简单有效'],
+     c:['阈值难调','两框距离很近时容易误删'],
+     w:'所有目标检测模型的后处理标配。'},
+    {id:'iou',nm:'IoU (交并比)',
+     f:'$$IoU = \\frac{预测框 \\cap 真值框}{预测框 \\cup 真值框}$$',
+     e:'预测框和真实框的重叠程度。完全重合=1，完全不挨着=0。通常IoU>0.5算预测正确。',
+     p:['直观衡量框重叠程度','标准评价指标'],
+     c:['IoU=0时梯度为0（不可导）','对框的尺度不敏感'],
+     w:'判定检测框是否正确、计算mAP的基础。'},
+    {id:'map',nm:'mAP (平均精度均值)',
+     f:'$$mAP = \\frac{1}{C}\\sum_{c=1}^C AP_c$$  AP = PR曲线下的面积',
+     e:'每类猫、狗、车分别画一条PR曲线算AP，然后取平均。mAP@0.5是IoU阈值0.5时的mAP。mAP@[0.5:0.95]是IoU从0.5到0.95多个阈值下mAP的平均，更严格。',
+     p:['综合考虑Precision和Recall','标准评价指标，可比性强'],
+     c:['计算相对复杂','不理解PR曲线就看不懂mAP'],
+     w:'目标检测模型性能评价的黄金标准。'},
+    {id:'detect_compare',nm:'单阶段 vs 双阶段',
+     f:'单阶段: YOLO/SSD/RetinaNet  双阶段: R-CNN/Fast/Faster R-CNN',
+     e:'双阶段先提候选框再分类回归\u2192精度高但慢。单阶段一步到位密集预测\u2192速度快但精度低。后来Focal Loss解决了单阶段正负样本不平衡问题，RetinaNet精度首次追平双阶段。',
+     p:['单阶段速度快适合实时','双阶段精度高适合精细'],
+     c:['单阶段正负样本极不平衡（已通过Focal Loss改善）'],
+     w:'精度优先选Faster R-CNN，速度优先选YOLO，平衡选RetinaNet。'}
+  ]},
+  {n:'五、循环神经网络(RNN)', i:'\uD83D\uDD04', ts:[
+    {id:'rnn',nm:'RNN (循环神经网络)',
+     f:'$$h_t = \\tanh(W_{hh}h_{t-1} + W_{hx}x_t + b_h)$$',
+     e:'读句子：读到\u201c我\u201d记下状态，读到\u201c今天\u201d结合之前的记忆，读到\u201c很\u201d再更新\u2026\u2026所有时间步共享同一套参数。关键：因为每一步都乘W_hh和tanh导数，连乘T步后梯度指数衰减（<1）或爆炸（>1）。',
+     p:['能处理任意长度序列','参数共享，模型简洁','天然适合时序数据'],
+     c:['梯度消失/爆炸严重','串行计算不能并行','需要BPTT，训练慢'],
+     w:'理解序列模型的基础。考试必考。'},
+    {id:'rnn_struct',nm:'RNN的5种结构类型',
+     f:'One-to-one / One-to-many / Many-to-one / Many-to-many(对齐) / Many-to-many(不对齐)',
+     e:'One-to-one=标准NN（图像分类）。One-to-many=输入一个音符\u2192输出一串旋律（音乐生成）。Many-to-one=输入句子\u2192输出情感（情感分类）。Many-to-many对齐=每个词标标签（命名实体识别）。Many-to-many不对齐=输入英文\u2192输出中文（机器翻译/Seq2Seq）。',
+     p:['不同结构覆盖不同任务类型'],
+     c:['各结构参数不能共享'],
+     w:'考试常考结构-任务匹配。'},
+    {id:'bptt',nm:'BPTT (随时间反向传播)',
+     f:'$$\\frac{\\partial \\mathcal{L}}{\\partial h_t} = \\underbrace{\\frac{\\partial \\mathcal{L}_t}{\\partial y_t}\\frac{\\partial y_t}{\\partial h_t}}_{当前步} + \\underbrace{\\frac{\\partial \\mathcal{L}}{\\partial h_{t+1}}\\frac{\\partial h_{t+1}}{\\partial h_t}}_{未来传回}$$',
+     e:'前向从左到右看完整句，反向从右到左把误差传回每个时间步。需优化三个参数矩阵W_hx, W_hh, W_yh。RNN梯度消失根源：\u2202h_T/\u2202h_1 = \u220f tanh\u2032(z_k)\u00b7W_hh，连乘导致。',
+     p:['原理就是链式法则，好理解'],
+     c:['时间步很长时梯度消失/爆炸','串行不可并行'],
+     w:'RNN系列模型的标准训练算法。'},
+    {id:'bi',nm:'双向RNN (BiRNN)',
+     f:'$$h_t = [\\overrightarrow{h}_t; \\overleftarrow{h}_t]$$',
+     e:'判断句子\u201c这家餐厅太难吃了\u201d\u2014\u2014从左到右知道难吃=负面，从右到左的\u201c了\u201d对情感有强化。双向看到过去+未来全部信息，判断更准。缺陷：不能实时处理（需完整序列）。',
+     p:['融合前后文全部信息','命名实体识别等任务精度更高'],
+     c:['不能实时处理','参数翻倍'],
+     w:'NLP任务中需要完整上下文的场景。'},
+    {id:'deeprnn',nm:'深层RNN (Deep RNN)',
+     f:'$$h_t^{(l)} = \\tanh(W_{hh}^{(l)} h_{t-1}^{(l)} + W_{hx}^{(l)} h_t^{(l-1)} + b^{(l)})$$',
+     e:'底层抓词级特征，中层抓短语级特征，顶层抓句子级语义。各层参数独立不共享。加深增加表示能力，但梯度消失更严重。',
+     p:['提取不同层次的时间特征','表示能力更强'],
+     c:['梯度消失更严重（深\u00d7长）','参数更多'],
+     w:'需要层次化序列表示时。'}
+  ]},
+  {n:'六、LSTM & GRU', i:'\uD83D\uDE80', ts:[
+    {id:'lstm',nm:'LSTM (长短时记忆网络)',
+     f:'$$\\begin{aligned} f_t &= \\sigma(W_f[h_{t-1},x_t]+b_f)\\\\ i_t &= \\sigma(W_i[h_{t-1},x_t]+b_i)\\\\ \\tilde{c}_t &= \\tanh(W_c[h_{t-1},x_t]+b_c)\\\\ c_t &= f_t\\odot c_{t-1} + i_t\\odot\\tilde{c}_t\\\\ o_t &= \\sigma(W_o[h_{t-1},x_t]+b_o)\\\\ h_t &= o_t\\odot\\tanh(c_t) \\end{aligned}$$',
+     e:'加一条传送带（细胞状态c_t），信息在上面几乎无损直线传送。遗忘门决定忘多少旧记忆，输入门决定加多少新信息，输出门决定输出多少。门不是内置知识，是训练出来的\u2014\u2014每个门=带Sigmoid的小型NN，通过梯度下降学什么时候该存什么时候该忘。',
+     p:['梯度消失大幅缓解（加法结构c_t = f\u00b7c_{t-1}+i\u00b7\u0109_t）','细胞状态可长距离传递','三门控灵活'],
+     c:['参数多（4倍于RNN），慢','超长序列(>200步)仍衰减','不能并行（致命，被Transformer取代）'],
+     w:'需要对长距离依赖建模的序列任务。'},
+    {id:'gru',nm:'GRU (门控循环单元)',
+     f:'$$\\begin{aligned} r_t &= \\sigma(W_r[h_{t-1},x_t]+b_r)\\\\ \\tilde{h}_t &= \\tanh(W_h[r_t\\odot h_{t-1},x_t]+b_h)\\\\ z_t &= \\sigma(W_z[h_{t-1},x_t]+b_z)\\\\ h_t &= z_t\\odot h_{t-1} + (1-z_t)\\odot\\tilde{h}_t \\end{aligned}$$',
+     e:'GRU把LSTM三个门砍成两个门，合并细胞状态和隐藏状态，参数少25%训练更快效果几乎不降。更新门z同时控制忘多少旧和加多少新，z和1-z天然互补。数据量不大时GRU甚至比LSTM更好。',
+     p:['参数少25%，训练更快','合并遗忘+输入门避免冗余','小数据上比LSTM好'],
+     c:['门控表达力略弱于LSTM','没有独立细胞状态'],
+     w:'数据量中等或需要快速迭代时，默认无脑选GRU。'},
+    {id:'lstm_vs_trans',nm:'LSTM vs Transformer',
+     f:'LSTM: 串行链式  Transformer: 并行全连接',
+     e:'LSTM=逐时间步衰减传递，串行计算没法并行，200步后梯度就开始衰减。Transformer=Self-Attention一步到位，O(1)距离直连任意位置，全并行快5-10倍。LSTM小数据更好，Transformer大数据极强。',
+     p:['对比维度全面覆盖'],
+     c:['各有利弊'],
+     w:'考试最爱考的大对比！理解为什么Transformer成为主流。'}
+  ]},
+  {n:'七、Transformer', i:'\u26A1', ts:[
+    {id:'trans',nm:'Transformer',
+     f:'Self-Attention: $$\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$',
+     e:'读一句话时一次性看到所有词。\u201c我喂了猫因为它饿了\u201d\u2014\u2014理解\u201c它\u201d就是\u201c猫\u201d时，Self-Attention直接建立它\u2192猫的连接，不管中间隔了几个字。不像RNN要一步一步传过去。',
+     p:['并行计算，训练快5-10倍','O(1)直连任意位置','Attention可可视化'],
+     c:['小数据易过拟合','需Positional Encoding','O(n\u00b2)复杂度长序列算不动'],
+     w:'现在NLP/CV/语音的默认模型。BERT、GPT、LLaMA、ViT全是它。'},
+    {id:'sa',nm:'Self-Attention (自注意力)',
+     f:'$$\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$',
+     e:'句子\u201c这只猫在追老鼠，它跑得很快\u201d\u2014\u2014\u201c它\u201d是谁？Self-Attention算出\u201c它\u201d和\u201c猫\u201d的相似度最高（注意力权重=0.85），知道它=猫。每个词跟所有词算相似度，O(1)距离直连。',
+     p:['O(1)距离直连任意位置','并行计算所有位置','可解释性强'],
+     c:['O(n\u00b2)复杂度','需Positional Encoding'],
+     w:'Transformer的核心机制。所有现代大模型的基础组件。'}
+  ]},
+  {n:'八、GAN系列', i:'\uD83C\uDFA8', ts:[
+    {id:'gan',nm:'GAN (生成对抗网络)',
+     f:'$$\\min_G\\max_D \\mathbb{E}[\\log D(x)] + \\mathbb{E}[\\log(1-D(G(z)))]$$',
+     e:'造假币的人(G)不断改进工艺让假币越来越真，警察(D)不断升级鉴别技术抓假币。互相竞争\u2192假币最终跟真的一样好到警察都分不出来。Minimax目标函数中D最大化（判真能力），G最小化（造假能力）。',
+     p:['生成样本极清晰逼真','博弈思想优雅'],
+     c:['训练不稳定，需要大量技巧','模式坍塌（只生成少数模式）','无显式密度估计'],
+     w:'需要生成高质量图像、图像翻译、超分辨率等。'},
+    {id:'gan_variants',nm:'GAN重要变体对比',
+     f:'DCGAN/ cGAN/ CycleGAN/ WGAN/ LSGAN/ StackGAN/ PatchGAN',
+     e:'DCGAN=CNN+BN+LeakyReLU，训练稳定图像清晰。cGAN=加条件c，可控生成指定类别。CycleGAN=加循环一致损失，不需要配对数据。WGAN=Wasserstein距离代替JS散度，训练更稳定。LSGAN=最小二乘损失。',
+     p:['各变体解决不同GAN痛点'],
+     c:['各有适用场景，没有万能变体'],
+     w:'考试常考GAN变体特点对比。'}
+  ]},
+  {n:'九、自编码器 (AE & VAE)', i:'\uD83D\uDCE6', ts:[
+    {id:'ae',nm:'AE (自编码器)',
+     f:'$$h = f_\\theta(x), \\quad \\hat{x}=g_\\phi(h), \\quad L=\\|x-\\hat{x}\\|^2$$',
+     e:'让网络学会把图像压缩成关键特征(code)\u2192再完美恢复原图。但隐空间不平滑、不连续，从隐空间中采一个随机向量\u2192Decoder输出噪声图像（不能生成新数据）。',
+     p:['无监督，不需要标签','学习数据的紧凑表示','可用于降维和去噪'],
+     c:['隐空间不平滑不连续','只能重建不能生成新数据'],
+     w:'无监督特征学习、数据压缩、图像去噪、异常检测。'},
+    {id:'vae',nm:'VAE (变分自编码器)',
+     f:'$$\\mathcal{L} = \\underbrace{\\|x-\\hat{x}\\|^2}_{重构} + \\underbrace{D_{KL}(q_\\phi(z|x)\\|p(z))}_{KL约束}$$',
+     e:'AE只能把已有猫图压缩再恢复（不能造新猫）。VAE学会了猫的空间\u2014\u2014Encoder输出的是分布参数(\u03bc,\u03c3)而不是单值，隐空间平滑连续。从隐空间中采一个点\u2192生成一只全新的猫（虽然比GAN模糊一点）。',
+     p:['隐空间平滑连续，可生成新数据','隐变量各维度可能有语义含义','重参数化技巧z=\u03bc+\u03b5\u03c3解决梯度回传'],
+     c:['生成图像模糊（不如GAN清晰）','KL项和重构项需要平衡'],
+     w:'需要生成新数据或平滑可解释的隐空间。'}
+  ]},
+  {n:'十、无监督学习', i:'\uD83D\uDD0D', ts:[
+    {id:'ul',nm:'无监督学习 (UL)',
+     f:'三要素：模型 + 学习准则 + 优化算法  三大任务：特征学习/密度估计/聚类',
+     e:'给一堆照片不告诉它们是什么，让算法自己发现这些有毛的是猫，那些光滑的是汽车。自监督学习是最近热点（BERT、MAE、SimCLR）\u2014\u2014无标签但自己造伪标签做pretext task。',
+     p:['数据不需要标签（便宜）','可发现隐藏结构','可辅助监督学习'],
+     c:['结果难评价','不一定学出想要的特征'],
+     w:'大量无标签数据时。自监督是当前前沿方向。'},
+    {id:'pca',nm:'PCA (主成分分析)',
+     f:'中心化\u2192协方差矩阵\u2192特征值分解\u2192选top-k特征向量',
+     e:'把100维的人脸特征降到3维后可视化，还保留了最主要差异。高维数据降维后还能看出类别分布。',
+     p:['线性降维经典方法','可解释','计算快'],
+     c:['只能线性变换','对异常值敏感'],
+     w:'降维、数据预处理、可视化高维数据。'},
+    {id:'tsne',nm:'t-SNE',
+     f:'高维相似度\u2192低维相似度，最小化KL散度',
+     p:['可视化效果极好，同类清晰聚集'],
+     c:['随机性强每次结果不同','不能处理新样本','计算慢'],
+     w:'高维数据的可视化。面试最爱问。'}
+  ]},
+  {n:'十一、传统机器学习', i:'\uD83D\uDCD0', ts:[
+    {id:'svm',nm:'SVM (支持向量机)',
+     f:'Hinge Loss: $$\\max(0, 1-y\\hat{y})$$',
+     e:'两类点中间画分界线。SVM不仅画线，还要求线离两类点的距离最大（最大化Margin）。支持向量就是离分界线最近的那些关键点。分对了且离得远就不管了（Loss=0）。',
+     p:['理论上优秀（最大Margin）','核技巧可处理非线性'],
+     c:['大数据集训练慢','没有概率输出'],
+     w:'小样本高维二分类问题。'},
+    {id:'ada',nm:'AdaBoost',
+     f:'指数损失: $$L=e^{-y\\hat{y}}$$',
+     e:'先训练一个弱分类器，把错分的样本加大权重。下一个分类器重点学这些错例。如此串行加强。指数损失对错分样本指数级惩罚，错得越离谱下一轮权重越高。',
+     p:['把弱学习器提升为强学习器','理论保证泛化'],
+     c:['对噪声和异常值敏感','串行不能并行'],
+     w:'弱学习器的集成。'}
+  ]},
+  {n:'十二、激活函数', i:'\u26A1', ts:[
+    {id:'sig',nm:'Sigmoid (Logistic)',
+     f:'$$\\sigma(z) = \\frac{1}{1+e^{-z}}$$  导数: $$\\sigma\'=\\sigma(z)(1-\\sigma(z))$$ 峰值0.25',
+     e:'输入任意实数z，输出0~1。z很大\u21921，z很小\u21920，z=0\u21920.5。像一个软开关。LSTM三个门（遗忘、输入、输出）都用Sigmoid控制开关量。',
+     p:['输出(0,1)可解释为概率','平滑可导','用于LSTM门控'],
+     c:['梯度饱和/消失（导数峰值只0.25）','非零中心化（输出恒>0）\u2192收敛慢'],
+     w:'二分类输出层、LSTM/GRU的门控、注意力权重。'},
+    {id:'tanh',nm:'Tanh (双曲正切)',
+     f:'$$\\tanh(z) = \\frac{e^z-e^{-z}}{e^z+e^{-z}}$$  导数: $$\\tanh\' = 1-\\tanh^2(z)$$',
+     p:['零中心化（-1~1）\u2192收敛快'],
+     c:['仍存在梯度饱和/消失'],
+     w:'RNN隐藏层默认、LSTM/GRU候选隐藏状态(\u0109_t, \u1e25_t)。'},
+    {id:'relu',nm:'ReLU',
+     f:'$$ReLU(z) = \\max(0, z)$$',
+     e:'负数全挡掉变0，正数原样通过。x>0时导数恒为1，不会衰减梯度，缓解梯度消失。计算只需max操作极快。但x<0时梯度为0\u2192Dead ReLU神经元坏死。',
+     p:['计算极快','x>0时导数恒为1缓解梯度消失','单侧抑制\u2192稀疏表示'],
+     c:['Dead ReLU（x<0梯度=0\u2192神经元坏死）','输出非零中心化'],
+     w:'CNN/MLP隐含层的默认激活函数（90%以上都用它）。'},
+    {id:'act_by_arch',nm:'激活函数按架构归类',
+     f:'CNN\u2192ReLU+Softmax | RNN\u2192tanh | LSTM\u2192Sigmoid门+tanh状态 | GAN\u2192tanh输出+Sigmoid判真',
+     e:'CNN隐含层ReLU（快+缓解梯度消失），输出层Softmax（概率分布）。RNN隐藏层tanh（零中心化控制记忆衰减）。LSTM门Sigmoid（开关量）+候选状态tanh（记忆内容）。GAN生成器输出tanh（图像像素-1~1），鉴别器输出Sigmoid（真假二分类）。',
+     p:['考试必考！各架构用哪些激活函数及原因'],
+     w:'复习重点\u2014\u2014记清楚每个架构的激活函数搭配。'}
+  ]},
+  {n:'十三、损失函数', i:'\uD83D\uDCC9', ts:[
+    {id:'mse',nm:'MSE (平方损失)',
+     f:'$$L = (y-\\hat{y})^2$$',
+     e:'房价300万，预测280万\u2192损失400。预测100万\u2192损失40000。误差大时惩罚巨大。有闭式解，但对异常值极度敏感。Sigmoid+MSE在饱和区梯度\u22480\u2192学不动。',
+     p:['有闭式解','处处可导'],
+     c:['对异常值极度敏感','Sigmoid饱和区梯度\u22480\u2192学不动'],
+     w:'回归任务（房价预测、温度预测）。'},
+    {id:'mae',nm:'MAE (绝对值损失)',
+     f:'$$L = |y-\\hat{y}|$$',
+     p:['比MSE对异常值鲁棒'],
+     c:['z=0处不可导','梯度恒为\u00b11，训练易震荡'],
+     w:'回归任务，尤其是低层视觉（深度估计、光流）。'},
+    {id:'ce',nm:'交叉熵损失 (Cross-Entropy)',
+     f:'$$L = -\\log \\hat{y}_{真值类}$$ 梯度: $$\\frac{\\partial L}{\\partial z_i} = \\hat{y}_i - y_i$$',
+     e:'猫图预测[0.95,0.04,0.01]\u2192损失=0.05（小惩）。猜成狗[0.10,0.85,0.05]\u2192损失=2.30（大惩）。梯度=预测-真值，极简！误差越大更新越快。三步推导：展开\u2192对z_i求导\u2192合并得\u0177-y。',
+     p:['误差越大更新越快','配合Softmax梯度=预测-真值，极简'],
+     c:['需要配合Softmax','对标签噪声敏感'],
+     w:'分类任务默认损失函数。相比MSE：交叉熵在误差大时更新快，MSE在饱和区学不动。'},
+    {id:'focal',nm:'Focal Loss',
+     f:'$$FL(p_t) = -(1-p_t)^\\gamma \\log p_t$$  本质=交叉熵\u00d7调制因子',
+     e:'简单背景样本(p_t=0.99)：调因子(0.01)\u00b2=0.0001，几乎忽略\u2192\u22480。困难猫样本(p_t=0.3)：调因子(0.7)\u00b2=0.49，全力学习。RetinaNet靠它单阶段精度首追上双阶段。',
+     p:['解决正负样本不平衡','调制因子自动降低简单样本权重'],
+     c:['需要调\u03b3和\u03b1超参数'],
+     w:'目标检测中正负样本极度不平衡（RetinaNet）。'}
+  ]},
+  {n:'十四、优化器', i:'\uD83C\uDFC3', ts:[
+    {id:'sgd',nm:'SGD (随机梯度下降)',
+     f:'$$w_{t+1} = w_t - \\eta \\nabla L$$',
+     e:'盲人摸路下山\u2014\u2014摸一下脚底最陡的方向直接迈一步。简单但震荡大，遇小坑直接掉进去。峡谷地形来回晃。BGD用全数据集但太慢，Mini-Batch GD(16~256样本)最常用。',
+     p:['实现简单','理论成熟'],
+     c:['震荡大、收敛慢','学习率难调'],
+     w:'作为优化器的基础对比。'},
+    {id:'momentum',nm:'SGD + Momentum',
+     f:'$$v_t = \\gamma v_{t-1} + \\eta\\nabla L, \\quad w_{t+1}=w_t-v_t$$',
+     e:'盲人推铁球下山：铁球有惯性。刚下坡加速（积累动量），遇小坑靠惯性冲过去（跳出局部最优），峡谷左右震荡互相抵消只剩向下冲。',
+     p:['加速收敛','抑制震荡','可跳出局部最优'],
+     c:['多一个\u03b3超参数'],
+     w:'经典训练中追求好泛化时。\u03b3通常取0.9。'},
+    {id:'adam',nm:'Adam (最常用)',
+     f:'$$m_t = \\beta_1 m_{t-1}+(1-\\beta_1)\\nabla L$$ $$v_t = \\beta_2 v_{t-1}+(1-\\beta_2)(\\nabla L)^2$$',
+     e:'SGD=盲人摸路\u2192Momentum=推铁球下山\u2192RMSprop=看路况调步长\u2192Adam=推铁球下山+每一步看路况调步长。双层buff，\u03b7=0.001直接work，不用调（超参数不敏感）。',
+     p:['融合Momentum和自适应步长','超参数不敏感默认直接work'],
+     c:['泛化有时不如SGD+Momentum'],
+     w:'首选的默认优化器，大部分任务无脑选Adam。'},
+    {id:'opt_compare',nm:'优化器完整对比',
+     f:'SGD\u2192SGD+Momentum\u2192AdaGrad\u2192RMSprop\u2192Adam',
+     e:'SGD方向看当前梯度步长固定\u2192Momentum方向看动量步长固定\u2192AdaGrad方向看当前梯度步长历史平方衰减（但单调归零）\u2192RMSprop方向看当前梯度步长移动平均衰减（学习率不死亡）\u2192Adam方向看动量步长自适应。',
+     p:['对比维度全面','掌握各优化器演进逻辑'],
+     w:'考试常考区分各优化器核心差异。'}
+  ]},
+  {n:'十五、归一化方法', i:'\uD83D\uDCCA', ts:[
+    {id:'bn',nm:'Batch Norm (BN)',
+     f:'$$\\hat{x} = \\frac{x-\\mu_B}{\\sigma_B}, \\quad y = \\gamma\\hat{x} + \\beta$$',
+     e:'把一个batch里所有图片的同一个通道统计均值方差，归一化到标准分布。训练时不同batch统计量不同\u2192引入随机噪声\u2192有轻微正则化效果（副作用，不是设计目标）。推理时用全局移动平均，不再有噪声。',
+     p:['加速收敛，允许大学习率','有轻微正则化效果'],
+     c:['小batch不稳(batch<16)','不适用于RNN','训练/推理不一致'],
+     w:'CNN标配。几乎所有CNN里都用。'},
+    {id:'ln',nm:'Layer Norm (LN)',
+     f:'$$\\hat{x} = \\frac{x-\\mu_L}{\\sigma_L}$$',
+     e:'每个样本单独做归一化，跟batch大小无关。RNN输入长度变化时很好。Transformer每个子层后都有LN\u2014\u2014因为Transformer用ResNet风格结构必须用LN（BN+残差会出问题）。',
+     p:['不依赖batch size','训练推理一致','RNN/Transformer友好'],
+     w:'RNN、LSTM、Transformer的标配归一化。'},
+    {id:'gn',nm:'Group Norm (GN)',
+     f:'通道分组内做归一化',
+     e:'batch=2甚至batch=1时BN效果极差。GN把通道分成几组（如每组16个），在组内归一化。论文结论：batch=2时GN比BN高10个点。',
+     p:['不依赖batch size','小batch下远优于BN'],
+     c:['分组数需要调'],
+     w:'batch size很小的场景（医学图像、视频检测、大模型微调）。'}
+  ]},
+  {n:'十六、正则化', i:'\uD83D\uDEE1\uFE0F', ts:[
+    {id:'l2',nm:'L2正则化 (权重衰减)',
+     f:'$$\\mathcal{L} = \\mathcal{L}_0 + \\lambda\\|W\\|_2^2$$',
+     e:'每次更新权重前先乘(1-2\u03b7\u03bb)缩小一点。L2惩罚随|w|平方增长，小权重时拉力几乎为零\u2192缩得很小但不归零。像收税\u2014\u2014收入越高税越重，但永远不把你的钱没收完。',
+     p:['缩小权重防止过拟合','使矩阵一定可逆','最通用的正则化'],
+     c:['不能做特征选择（不给0）','需要调\u03bb'],
+     w:'几乎所有深度学习模型都会加L2。'},
+    {id:'l1',nm:'L1正则化 (Lasso)',
+     f:'$$\\mathcal{L} = \\mathcal{L}_0 + \\lambda\\|W\\|_1$$',
+     e:'L1惩罚线性恒定，权再小也在持续拉\u2192拉到精确0。所以L1能做特征选择\u2014\u2014不重要的特征权重直接变0（稀疏解）。L2像是随时收税\u2192权重缩很小，L1像是恒定收税\u2192权重被持续拉向0最终归零。',
+     p:['产生稀疏解（特征选择）','高维数据下效果好'],
+     c:['无闭合解','特征数较少时不如L2'],
+     w:'高维稀疏数据、需要特征选择时。'},
+    {id:'drop',nm:'Dropout (随机失活)',
+     f:'训练以p保留（保留的\u00f7p放大），推理全量不做缩放（Inverted Dropout）',
+     e:'培训时随机让一半学生请假（神经元置0，p=0.5）。剩下的学生必须学会所有内容，不能依赖学霸。推理时全部激活=每个子网（共2\u207f个）共同决策。CNN层p=0.8~0.9，FC层p=0.5。',
+     p:['免费做隐式集成学习（2\u207f个子网络投票）','训练推理成本不增加','有效防过拟合'],
+     c:['p值需要调','有BN后可减小Dropout力度'],
+     w:'全连接层和CNN层中防止过拟合。'},
+    {id:'da',nm:'数据扩增 (Data Augmentation)',
+     f:'翻转/旋转/缩放/裁剪/平移/加噪声/光照变化/遮挡',
+     e:'猫图只有1000张。水平翻转(2\u00d7)\u2192镜像猫。旋转\u00b115\u00b0\u2192歪头猫。裁剪\u2192只看猫脸。加噪声\u2192有雪花的猫。瞬间变出10000张。',
+     p:['最有效的防过拟合方法','几乎免费增加数据'],
+     c:['需要知道适合扩增的方式','扩增太强可能改变语义'],
+     w:'数据量不足时的必选方案。图像任务标配。'},
+    {id:'es',nm:'提前停止 (Early Stop)',
+     f:'验证损失不再下降\u2192取该点模型',
+     e:'训练中每轮记录验证集loss。第50轮验证loss最低，之后开始上升（过拟合），回到第50轮的模型作为最终结果。',
+     p:['简单有效','免费的正则化'],
+     c:['不能和验证集一起调'],
+     w:'几乎所有训练流程都会用。最省心。'}
+  ]},
+  {n:'十七、参数初始化', i:'\uD83C\uDFB2', ts:[
+    {id:'xavier',nm:'Xavier初始化 (Glorot)',
+     f:'$$W \\sim \\mathcal{N}\\left(0, \\frac{2}{n_{in}+n_{out}}\\right)$$',
+     e:'为Tanh/Sigmoid设计。前向需求Var(w)=1/n_in，反向需求Var(w)=1/n_out，Xavier折中取2/(n_in+n_out)调和平均。缺点：ReLU下把一半神经元置0\u2192方差砍半，信号衰减。',
+     p:['同时保持前向和反向方差稳定','为Tanh/Sigmoid设计'],
+     c:['ReLU下失效'],
+     w:'使用Sigmoid/Tanh时的默认初始化。'},
+    {id:'kaiming',nm:'Kaiming初始化 (He)',
+     f:'$$W \\sim \\mathcal{N}\\left(0, \\frac{2}{n_{in}}\\right)$$',
+     e:'为ReLU专门设计。ReLU把一半神经元置0\u2192输出方差砍半\u2192Kaiming补因子2。前向最优2/n_in，反向最优2/n_out，ReLU下各自砍半系数相同，用fan_in或fan_out都不亏，不需要像Xavier那样折中妥协。',
+     p:['为ReLU专门设计','保持ReLU下信号稳定','152层ResNet靠它随便训'],
+     c:['只适用于ReLU族'],
+     w:'ReLU激活时的默认初始化方法。'}
+  ]},
+  {n:'十八、训练策略', i:'\uD83C\uDF9B\uFE0F', ts:[
+    {id:'ft',nm:'微调 (Fine-tuning)',
+     f:'预训练权重 + 小学习率(\u03b7比正常小5-10倍) + 部分冻结/解冻',
+     e:'ImageNet上训好的ResNet\u2192猫狗分类。浅层（边缘纹理）通用于所有图像任务不动，中层（形状）大部分通用微调一下，深层（完整物体）和FC层（分类决策）彻底重学。数据少就只调分类层，数据多可多调几层。',
+     p:['省时间','提精度','省数据'],
+     c:['预训练数据差异太大会反效果','数据足够多时随机初始化也能达到（但需2-3倍时间）'],
+     w:'有预训练模型可用的大部分CV/NLP任务。'},
+    {id:'snapshot',nm:'Snapshot Ensemble',
+     f:'SGDR每个周期末尾存checkpoint\u2192推理时多个模型平均',
+     e:'SGDR训练100个epoch，余弦退火4次\u2192每个周期末尾各存1个checkpoint\u2192共4个模型\u2192推理平均。注意：不是零成本\u2014\u2014总epoch固定（100），每个模型只看到25个epoch，效果不如各自训100个epoch（400epoch）。',
+     p:['同一训练预算顺路多存几个模型','相对便宜的集成'],
+     c:['每个模型看到的epoch少（总epoch固定时）','不是真正的零成本（Dropout才是）'],
+     w:'考试常和Dropout对比集成学习成本。'},
+    {id:'gc',nm:'梯度裁剪',
+     f:'$$如果\\|\\nabla L\\| > C：\\nabla L = C \\cdot \\frac{\\nabla L}{\\|\\nabla L\\|}$$',
+     e:'梯度直接算出来是1000（爆炸），裁剪到5。像给水管装限流阀，水压太大时自动限流防止爆管。RNN/BPTT标配，梯度爆炸的解决方案之一。',
+     p:['防梯度爆炸','简单安全'],
+     c:['阈值C需要调'],
+     w:'RNN/LSTM训练标配。'}
+  ]},
+  {n:'十九、评价指标', i:'\uD83D\uDCCF', ts:[
+    {id:'pr',nm:'PR曲线 & BEP & F1',
+     f:'$$P=\\frac{TP}{TP+FP}, R=\\frac{TP}{TP+FN}, F1=\\frac{2PR}{P+R}$$',
+     e:'PR曲线怎么来？模型输出概率不是硬类别。不断改变阈值（0.99\u21920.50）得到一序列(P,R)点连成曲线。阈值0.99\u2192P=1.0,R=0.1；阈值0.50\u2192P=0.5,R=1.0。BEP=P=R的交点。F1是P和R的调和平均，对低值极度敏感\u2014\u2014P=0.9,R=0.1\u2192F1=0.18（算术平均0.5\u2192可蒙混过关\u2716）。',
+     p:['全面反映模型P/R权衡','F1对低值极度敏感'],
+     w:'二分类模型性能评价。考试常考PR曲线的含义和F1的优势。'},
+    {id:'cm',nm:'混淆矩阵',
+     f:'对角线=正确分类，非对角线=错误分类  Accuracy=对角线之和/总和',
+     e:'3分类：预测概率[0.05,0.90,0.05]\u2192argmax\u2192预测=2，真实=2\u2192填(2,2)位置+1（\u2714正确）。训练时用概率算loss\u2192反向传播，评估时用argmax填混淆矩阵\u2192算指标。阶段分工明确。',
+     p:['直观展示各类别表现','可看出哪些类容易混淆'],
+     w:'分类问题的基础评价工具。'}
+  ]},
+  {n:'二十、其他重要概念', i:'\uD83D\uDCCC', ts:[
+    {id:'rf',nm:'感受野 (Receptive Field)',
+     f:'$$RF_n = RF_{n-1} + (K_n-1)\\times\\prod_{i=1}^{n-1}S_i$$  初始RF=1',
+     e:'N个3\u00d73卷积(无池化)\u2192感受野=2N+1，跟1个(2N+1)\u00d7(2N+1)卷积一样大但参数更少\u2192VGG核心思想。含池化例子：Conv3(Pool2,S=2)\u2192RF=4，再来Conv3\u2192RF=8。层越深+stride乘积越大\u2192感受野增长越猛。',
+     p:['理解CNN层间关系','VGG核心理念：小核堆叠=大核感受野'],
+     w:'CNN结构设计核心概念。'},
+    {id:'bp',nm:'反向传播 (BP)',
+     f:'链式法则：$$\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial y}\\frac{\\partial y}{\\partial z}\\frac{\\partial z}{\\partial w}$$',
+     e:'前向\u2192算损失（有多差），反向\u2192链式法则把梯度传回每层（每层对最终损失贡献了多少梯度），梯度下降\u2192更新权重。需要全部中间结果\u2192占用显存。',
+     p:['使得多层网络训练成为可能','理论基础扎实'],
+     c:['深度大时梯度消失/爆炸','需要全部中间结果（显存）'],
+     w:'所有神经网络的标准训练算法。'},
+    {id:'vg',nm:'梯度消失 & 梯度爆炸',
+     f:'消失: \\sigma\'\\leq0.25, 连乘\u2192前层\u22480  爆炸: W特征值>1, 连乘\u2192NaN',
+     e:'消失：Sigmoid导数0.25，3层后=0.016，10层后=10\u207b\u2076，前层学不动。爆炸：RNN中W_hh特征值>1，BPTT连乘T步\u2192指数增长\u2192训练崩溃出现NaN。解决方案：消失\u2192ReLU+残差+BN，爆炸\u2192梯度裁剪+Kaiming初始化+小学习率。',
+     p:['考试必考对比'],
+     w:'深度网络的经典问题，理解解决方案组合拳。'},
+    {id:'sc',nm:'Skip Connection (残差连接)',
+     f:'$$F(x) + x$$',
+     e:'原来要学H(x)=x+g(x)（难）。ResNet改成学F(x)=H(x)-x（残差=只需要学x\u2192H(x)的差距），输出F(x)+x。如果H(x)=x是最优，只需学F(x)=0\u2192把权重推到0\u2192容易。跳线让梯度可直达前层\u2192所以152层也能训。',
+     p:['梯度可直达前层','使得152层也能训练','无额外参数'],
+     w:'ResNet及所有现代深度网络的核心组件。'},
+    {id:'of',nm:'过拟合 & 欠拟合',
+     f:'过拟合：训练\u2193验证\u2191  欠拟合：训练\u2191验证\u2191',
+     e:'过拟合=背答案\u2014\u2014原题满分换新题不会。欠拟合=直线拟合正弦曲线\u2014\u2014模型太简单怎么学都不行。解决过拟合：增数据+正则化+早停+简化模型。解决欠拟合：加容量+减正则+更久训练。',
+     w:'评估模型状态的基础诊断工具。'}
+  ]}
+];
+
+// ============ RENDER ============
+var catList = document.getElementById('catList');
+var html = '';
+for (var ci = 0; ci < D.length; ci++) {
+  var cat = D[ci];
+  html += '<div class=\"cat-item\">';
+  html += '<div class=\"cat-header\" onclick=\"toggleCat('+ci+')\">';
+  html += '<span>'+cat.i+' '+cat.n+'</span>';
+  html += '<span class=\"count\">'+cat.ts.length+'</span></div>';
+  html += '<div class=\"term-list\" id=\"cat-'+ci+'\">';
+  for (var ti = 0; ti < cat.ts.length; ti++) {
+    html += '<div class=\"term-item\" id=\"term-'+ci+'-'+ti+'\" onclick=\"showDetail('+ci+','+ti+')\">'+cat.ts[ti].nm+'</div>';
+  }
+  html += '</div></div>';
+}
+catList.innerHTML = html;
+
+function toggleCat(ci) {
+  var el = document.getElementById('cat-'+ci);
+  if (!el) return;
+  el.classList.toggle('open');
+}
+
+function showDetail(ci, ti) {
+  var cat = D[ci];
+  var term = cat.ts[ti];
+  var items = document.querySelectorAll('.term-item');
+  for (var i = 0; i < items.length; i++) items[i].classList.remove('active');
+  var sel = document.getElementById('term-'+ci+'-'+ti);
+  if (sel) sel.classList.add('active');
+  var catEl = document.getElementById('cat-'+ci);
+  if (catEl) catEl.classList.add('open');
+  document.getElementById('detailTitle').textContent = term.nm;
+  document.getElementById('breadcrumb').textContent = cat.n+' > '+term.nm;
+  document.getElementById('welcome').style.display = 'none';
+  var h = '<div class=\"term-detail active\" id=\"termDetail\">';
+  h += '<div class=\"detail-title\">'+term.nm+'</div>';
+  h += '<div class=\"detail-cat\">'+cat.i+' '+cat.n+'</div>';
+  if (term.f) {
+    h += '<div class=\"detail-section\"><h4><span class=\"icon\">\uD83D\uDCD0</span>公式 / 流程</h4><div class=\"formula-box\">'+term.f+'</div></div>';
+  }
+  if (term.e) {
+    h += '<div class=\"detail-section\"><h4><span class=\"icon\">\uD83C\uDFAF</span>通俗例子</h4><div class=\"example-box\"><p>'+term.e+'</p></div></div>';
+  }
+  h += '<div class=\"pros-cons\">';
+  if (term.p && term.p.length) {
+    h += '<div class=\"pros-box\"><h5>'+'\u2705'+' 优点</h5>';
+    for (var j = 0; j < term.p.length; j++) h += '<div class=\"item\">'+term.p[j]+'</div>';
+    h += '</div>';
+  }
+  if (term.c && term.c.length) {
+    h += '<div class=\"cons-box\"><h5>'+'\u274C'+' 缺点</h5>';
+    for (var j = 0; j < term.c.length; j++) h += '<div class=\"item\">'+term.c[j]+'</div>';
+    h += '</div>';
+  }
+  h += '</div>';
+  if (term.w) {
+    h += '<div class=\"detail-section\"><h4><span class=\"icon\">\uD83D\uDCCC</span>什么时候用</h4><div class=\"when-box\"><p>'+term.w+'</p></div></div>';
+  }
+  h += '</div>';
+  document.getElementById('detailContainer').innerHTML = h;
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function filterTerms() {
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var cats = document.querySelectorAll('.cat-item');
+  for (var ci = 0; ci < cats.length; ci++) {
+    var cat = cats[ci];
+    var terms = cat.querySelectorAll('.term-item');
+    var hasMatch = false;
+    for (var ti = 0; ti < terms.length; ti++) {
+      var match = terms[ti].textContent.toLowerCase().indexOf(q) !== -1;
+      terms[ti].style.display = match ? 'block' : 'none';
+      if (match) hasMatch = true;
+    }
+    var tl = cat.querySelector('.term-list');
+    tl.style.display = q ? (hasMatch ? 'block' : 'none') : '';
+    if (q) {
+      if (hasMatch) tl.classList.add('open'); else tl.classList.remove('open');
+    }
+  }
+}
+
+toggleCat(0);
+</script>
+</body>
+</html>
